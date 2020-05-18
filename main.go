@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/tidwall/gjson"
 )
@@ -148,4 +149,11 @@ func (t *ToolManager) SendMsg(msg string) {
 		}
 	}
 
+}
+func main() {
+	manager := NewToolManager([]string{"http://13.228.159.171:38391","http://52.194.81.124:38391"})
+	for true {
+		manager.CheckStatus()
+		time.Sleep(sleepInterval * time.Second)
+	}
 }

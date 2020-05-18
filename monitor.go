@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	sleepInterval = 5 * 60
+	sleepInterval = 10
 	maxBlock      = 1
 )
 
@@ -71,10 +71,3 @@ func (t *ToolManager) CheckStatus() {
 	}
 }
 
-func main() {
-	manager := NewToolManager([]string{"http://13.228.159.171:38391"})
-	for true {
-		manager.CheckStatus()
-		time.Sleep(sleepInterval * time.Second)
-	}
-}
