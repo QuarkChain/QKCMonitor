@@ -1,16 +1,22 @@
 package main
 
 import (
+
+	//	"time"
+
+	//	"github.com/patrickmn/go-cache"
+
 	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strings"
 	"time"
 
 	"github.com/tidwall/gjson"
+	"gopkg.in/chanxuehong/wechat.v2/mp/core"
+	"gopkg.in/chanxuehong/wechat.v2/mp/message/template"
 )
 
 const (
@@ -23,31 +29,6 @@ const (
 type AccessTokenResponse struct {
 	AccessToken string  `json:"access_token"`
 	ExpiresIn   float64 `json:"expires_in"`
-}
-
-var openID = "oMQEkwtXXkTdrWjszFhsnOvFvfC8"
-
-type AccessTokenErrorResponse struct {
-	Errcode float64
-	Errmsg  string
-}
-
-// {
-//	"touser":"OPENID",
-//	"msgtype":"text",
-//	"text":
-//	{
-//		"content":"Hello World"
-//	}
-// }
-type CustomServiceMsg struct {
-	ToUser  string         `json:"touser"`
-	MsgType string         `json:"msgtype"`
-	Text    TextMsgContent `json:"text"`
-}
-
-type TextMsgContent struct {
-	Content string `json:"content"`
 }
 
 func fetchAccessToken() (string, float64, error) {
@@ -77,45 +58,8 @@ func fetchAccessToken() (string, float64, error) {
 		}
 		return atr.AccessToken, atr.ExpiresIn, nil
 	} else {
-		ater := AccessTokenErrorResponse{}
-		err = json.Unmarshal(body, &ater)
-		if err != nil {
-			return "", 0.0, err
-		}
-		return "", 0.0, fmt.Errorf("%s", ater.Errmsg)
+		panic("获取access_token 失败")
 	}
-}
-
-func pushCustomMsg(accessToken, toUser, msg string) error {
-	csMsg := &CustomServiceMsg{
-		ToUser:  toUser,
-		MsgType: "text",
-		Text:    TextMsgContent{Content: msg},
-	}
-
-	body, err := json.MarshalIndent(csMsg, " ", "  ")
-	if err != nil {
-		fmt.Println("pushCustomMsg err", err)
-		return err
-	}
-
-	postReq, err := http.NewRequest("POST",
-		strings.Join([]string{customServicePostUrl, "?access_token=", accessToken}, ""),
-		bytes.NewReader(body))
-	if err != nil {
-		return err
-	}
-
-	postReq.Header.Set("Content-Type", "application/json; encoding=utf-8")
-
-	client := &http.Client{}
-	resp, err := client.Do(postReq)
-	if err != nil {
-		return err
-	}
-	resp.Body.Close()
-
-	return nil
 }
 
 //获取关注者列表
@@ -137,23 +81,120 @@ func getflist(access_token string) []gjson.Result {
 	return flist
 }
 
-func (t *ToolManager) SendMsg(msg string) {
+// BookUpdateMSG 消息结构
+type BookUpdateMSG struct {
+	IP     template.DataItem `json:"ip"`
+	MsgErr template.DataItem `json:"msg_error"`
+}
+type TextMsgContent struct {
+	Content string `json:"content"`
+}
+
+func (t *ToolManager) SendMsg(ip string, msgErr string) {
 	t.checkFListUpdate()
-	fmt.Println("准备发送Msg", msg, "FList'Len", len(t.WeChatDetail.fList))
-	for _, openID := range t.WeChatDetail.fList {
-		fmt.Println("openID", openID, msg)
-		err := pushCustomMsg(t.WeChatDetail.accessToken, openID.Str, msg)
-		if err != nil {
-			log.Println("Push custom service message err:", err)
-			return
+	fmt.Println("FList", len(t.WeChatDetail.fList))
+	for _, v := range t.WeChatDetail.fList {
+		fmt.Println("openID", v)
+		bn := BookUpdateMSG{
+			IP:     template.DataItem{Value: ip, Color: "#173177"},
+			MsgErr: template.DataItem{Value: msgErr, Color: "#173177"},
 		}
+		msg := template.TemplateMessage2{
+			ToUser:     v.Str,
+			TemplateId: "JFpYC0Q9dX-eUrY8PRWKjCFCMfjo5MR5fdhFUCLpOhM",
+			//TemplateId: "R0omMNf2-Meb0U548lMP57oNbAYthj76JRQrvYyM-aE",//测试数据
+			Data:       bn,
+		}
+
+		_, err := template.Send(t.WeChatClt, msg)
+		fmt.Println(err, msg.Data)
 	}
 
 }
+
 func main() {
 	manager := NewToolManager([]string{"http://13.228.159.171:38391","http://52.194.81.124:38391"})
 	for true {
 		manager.CheckStatus()
 		time.Sleep(sleepInterval * time.Second)
+	}
+}
+
+const (
+	sleepInterval = 5*60
+	maxBlock      = 2
+	minPeers      = 3
+)
+
+type SendDetail struct {
+	fList       []gjson.Result
+	accessToken string
+	time        int64
+}
+
+type ToolManager struct {
+	IPList        []string //"http://127.0.0.1:38391"
+	MapClient     map[string]*Client
+	MapLastHeight map[string]uint64
+	WeChatDetail  *SendDetail
+	WeChatClt     *core.Client
+}
+
+func NewToolManager(ipList []string) *ToolManager {
+	m := &ToolManager{
+		IPList:        ipList,
+		MapClient:     make(map[string]*Client),
+		MapLastHeight: make(map[string]uint64),
+		WeChatDetail:  &SendDetail{},
+	}
+	for _, v := range ipList {
+		m.MapClient[v] = NewClient(v)
+	}
+
+	m.UpdateFList()
+	ats := core.NewDefaultAccessTokenServer(appID, appSecret, nil)
+	m.WeChatClt = core.NewClient(ats, nil)
+
+	return m
+}
+
+func (t *ToolManager) checkFListUpdate() {
+	if time.Now().Unix()-t.WeChatDetail.time > 30*60 {
+		t.UpdateFList()
+	}
+}
+
+func (t *ToolManager) UpdateFList() {
+	t.WeChatDetail.time = time.Now().Unix()
+	accessToken, _, err := fetchAccessToken()
+	if err != nil {
+		panic(err)
+	}
+	t.WeChatDetail.accessToken = accessToken
+	t.WeChatDetail.fList = getflist(accessToken)
+	fmt.Println("更新Flist", "time", time.Now().String(), "len", len(t.WeChatDetail.fList))
+}
+
+func (t *ToolManager) CheckStatus() {
+	for host, client := range t.MapClient {
+		peerNumber, err := client.GetPeers()
+		if err != nil {
+			t.SendMsg(host, err.Error())
+		}
+		height, err := client.GetRootBlockHeight()
+		if err != nil {
+			t.SendMsg(host, err.Error())
+		}
+
+		if height-t.MapLastHeight[host] <= maxBlock {
+			errMsg := fmt.Sprintf("time %s 节点出现故障：%d秒root的块数%d<=预期增长块数%d, 当前root高度%d, 上次root高度%d  peer个数%d", time.Now().String(), sleepInterval, height-t.MapLastHeight[host], maxBlock, height, t.MapLastHeight[host], peerNumber)
+			t.SendMsg(host, errMsg)
+		}
+
+		if peerNumber <= minPeers {
+			t.SendMsg(host, fmt.Sprintf("节点peer数目%d<=%d", peerNumber, minPeers))
+		}
+		t.MapLastHeight[host] = height
+		fmt.Println("检查完毕", time.Now().String(), "host", host, "root高度", height, "peer数量", peerNumber)
 	}
 }

@@ -28,6 +28,7 @@ func NewClient(host string) *Client {
 	client := jsonrpc.NewClient(host)
 	return &Client{client: client}
 }
+
 func (c *Client) GetRootBlockHeight() (uint64, error) {
 	resp, err := c.client.Call("getRootBlockByHeight", "")
 	if err != nil {
@@ -43,4 +44,16 @@ func (c *Client) GetRootBlockHeight() (uint64, error) {
 	}
 
 	return HexToUint64(height.(string))
+}
+
+func (c *Client) GetPeers() (int, error) {
+	resp, err := c.client.Call("getPeers")
+	if err != nil {
+		return 0, err
+	}
+	if resp.Error != nil {
+		return 0, resp.Error
+	}
+
+	return len(resp.Result.(map[string]interface{})["peers"].([]interface{})), nil
 }
