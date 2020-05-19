@@ -23,7 +23,6 @@ const (
 	appID                = "wx900ca629d0906a34"
 	appSecret            = "1d51ae95382ce4a4b81885b785f469fa"
 	accessTokenFetchUrl  = "https://api.weixin.qq.com/cgi-bin/token"
-	customServicePostUrl = "https://api.weixin.qq.com/cgi-bin/message/custom/send"
 )
 
 type AccessTokenResponse struct {
@@ -81,21 +80,16 @@ func getflist(access_token string) []gjson.Result {
 	return flist
 }
 
-// BookUpdateMSG 消息结构
-type BookUpdateMSG struct {
+type AlertMsg struct {
 	IP     template.DataItem `json:"ip"`
 	MsgErr template.DataItem `json:"msg_error"`
-}
-type TextMsgContent struct {
-	Content string `json:"content"`
 }
 
 func (t *ToolManager) SendMsg(ip string, msgErr string) {
 	t.checkFListUpdate()
-	fmt.Println("FList", len(t.WeChatDetail.fList))
+	fmt.Println("关注者列表", len(t.WeChatDetail.fList))
 	for _, v := range t.WeChatDetail.fList {
-		fmt.Println("openID", v)
-		bn := BookUpdateMSG{
+		bn := AlertMsg{
 			IP:     template.DataItem{Value: ip, Color: "#173177"},
 			MsgErr: template.DataItem{Value: msgErr, Color: "#173177"},
 		}
@@ -107,7 +101,10 @@ func (t *ToolManager) SendMsg(ip string, msgErr string) {
 		}
 
 		_, err := template.Send(t.WeChatClt, msg)
-		fmt.Println(err, msg.Data)
+		if err!=nil{
+			panic(err)
+		}
+		fmt.Println("发送成功", v,msgErr)
 	}
 
 }
@@ -121,8 +118,8 @@ func main() {
 }
 
 const (
-	sleepInterval = 5*60
-	maxBlock      = 2
+	sleepInterval = 10*60
+	maxBlock      = 1
 	minPeers      = 3
 )
 
@@ -154,7 +151,6 @@ func NewToolManager(ipList []string) *ToolManager {
 	m.UpdateFList()
 	ats := core.NewDefaultAccessTokenServer(appID, appSecret, nil)
 	m.WeChatClt = core.NewClient(ats, nil)
-
 	return m
 }
 
