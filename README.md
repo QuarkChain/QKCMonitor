@@ -1,8 +1,10 @@
 #QKC监视器
+```
     用来监控节点的运行情况
     使用方法：go run main.go ./cofig.json
-
+```
 ##config
+```
     {
       "RulerList": [{
         "Module": "BlockTime",     //检查类型
@@ -37,9 +39,10 @@
       }
       ]
     }
-    
+``` 
 
 ##模块
+```
     type RulerI interface {
     	Check() []string
     	PreCheck() error
@@ -47,3 +50,4 @@
     如果需要增加一个模块，需要实现这两个方法
              Check: 定期检查函数，返回错误类型，
              PreCheck: 程序启动时的预先检查，检查节点访问情况等
+```
