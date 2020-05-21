@@ -1,4 +1,4 @@
-package PeerNumber
+package peerNumber
 
 import (
 	"fmt"

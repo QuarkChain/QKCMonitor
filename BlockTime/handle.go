@@ -1,4 +1,4 @@
-package BlockTime
+package blockTime
 
 import (
 	"fmt"

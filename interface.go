@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 
-	"github.com/516108736/QKCMainnetMonitor/PeerNumber"
+	peerNumber "github.com/516108736/QKCMainnetMonitor/PeerNumber"
 
-	"github.com/516108736/QKCMainnetMonitor/BlockTime"
+	blockTime "github.com/516108736/QKCMainnetMonitor/BlockTime"
 	"github.com/516108736/QKCMainnetMonitor/common"
 )
 
@@ -17,9 +17,9 @@ type ModuleInterface interface {
 func NewRuler(config common.Config) (ModuleInterface, error) {
 	switch config.Module {
 	case "BlockTime":
-		return BlockTime.New(config)
+		return blockTime.New(config)
 	case "PeerNumber":
-		return PeerNumber.New(config)
+		return peerNumber.New(config)
 	default:
 		panic(fmt.Errorf("not support %v", config.Module))
 
