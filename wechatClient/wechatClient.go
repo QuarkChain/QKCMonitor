@@ -76,7 +76,7 @@ func (t *WechatClient) fetchAccessToken() (string, float64, error) {
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return "", 0.0, err
+		panic(err)
 	}
 
 	//Json Decoding
@@ -84,7 +84,7 @@ func (t *WechatClient) fetchAccessToken() (string, float64, error) {
 		atr := AccessTokenResponse{}
 		err = json.Unmarshal(body, &atr)
 		if err != nil {
-			return "", 0.0, err
+			panic(err)
 		}
 		return atr.AccessToken, atr.ExpiresIn, nil
 	} else {
@@ -98,12 +98,14 @@ func getflist(access_token string) []gjson.Result {
 	resp, err := http.Get(url)
 	if err != nil {
 		fmt.Println("获取关注列表失败", err)
+		panic(err)
 		return nil
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Println("读取内容失败", err)
+		panic(err)
 		return nil
 	}
 	flist := gjson.Get(string(body), "data.openid").Array()

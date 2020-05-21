@@ -1,7 +1,9 @@
 #QKC监视器
 ```
     用来监控节点的运行情况
-    使用方法：go run main.go ./cofig.json
+    使用方法：
+             go build
+             ./QKCMainnetMonitor ./config.json
 ```
 ##config
 ```

@@ -9,12 +9,12 @@ import (
 	"github.com/516108736/QKCMainnetMonitor/common"
 )
 
-type RulerI interface {
+type ModuleInterface interface {
 	Check() []string
 	PreCheck() error
 }
 
-func NewRuler(config common.Config) (RulerI, error) {
+func NewRuler(config common.Config) (ModuleInterface, error) {
 	switch config.Module {
 	case "BlockTime":
 		return BlockTime.New(config)
