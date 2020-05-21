@@ -132,7 +132,6 @@ func (t *WechatClient) SendMsg(msg string) {
 			panic(err)
 		}
 		fmt.Println("发送成功", v)
-		break
 	}
 
 }
