@@ -3,9 +3,9 @@ package main
 import (
 	"time"
 
-	"github.com/516108736/QKCMainnetMonitor/wechatClient"
+	"github.com/516108736/QKCMonitor/wechatClient"
 
-	"github.com/516108736/QKCMainnetMonitor/common"
+	"github.com/516108736/QKCMonitor/common"
 )
 
 type Instance struct {

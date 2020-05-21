@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/516108736/QKCMainnetMonitor/qkcClient"
+	"github.com/516108736/QKCMonitor/qkcClient"
 
-	"github.com/516108736/QKCMainnetMonitor/common"
+	"github.com/516108736/QKCMonitor/common"
 )
 
 type PeerNumber struct {

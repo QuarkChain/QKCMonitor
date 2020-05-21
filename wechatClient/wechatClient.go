@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/516108736/QKCMainnetMonitor/common"
+	"github.com/516108736/QKCMonitor/common"
 	"github.com/tidwall/gjson"
 	"gopkg.in/chanxuehong/wechat.v2/mp/core"
 	"gopkg.in/chanxuehong/wechat.v2/mp/message/template"

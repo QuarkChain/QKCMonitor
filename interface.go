@@ -3,10 +3,9 @@ package main
 import (
 	"fmt"
 
-	peerNumber "github.com/516108736/QKCMainnetMonitor/PeerNumber"
-
-	blockTime "github.com/516108736/QKCMainnetMonitor/BlockTime"
-	"github.com/516108736/QKCMainnetMonitor/common"
+	"github.com/516108736/QKCMonitor/blockTime"
+	"github.com/516108736/QKCMonitor/common"
+	"github.com/516108736/QKCMonitor/peerNumber"
 )
 
 type ModuleInterface interface {
