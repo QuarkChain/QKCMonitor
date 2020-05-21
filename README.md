@@ -3,7 +3,7 @@
     用来监控节点的运行情况
     使用方法：
              go build
-             ./QKCMainnetMonitor ./config.json
+             ./QKCMonitor ./config.json
 ```
 ##config
 ```
