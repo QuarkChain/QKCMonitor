@@ -2,7 +2,7 @@
   "RulerList": [{
     "Module": "BlockTime",
     "Hosts": ["http://13.228.159.171:38391","http://52.194.81.124:38391"],
-    "Interval": 10,
+    "Interval": 600,
     "WeChatDetail": {
       "AppID": "wx900ca629d0906a34",
       "AppSecret": "1d51ae95382ce4a4b81885b785f469fa",
@@ -11,13 +11,13 @@
     "AlertLevel": "P0",
     "Email": null,
     "Extra": {
-      "Interval": 10,
+      "Interval": 600,
       "MaxBlock": 1
     }
   },{
     "Module": "PeerNumber",
     "Hosts": ["http://13.228.159.171:38391","http://52.194.81.124:38391"],
-    "Interval": 10,
+    "Interval": 600,
     "WeChatDetail": {
       "AppID": "wx900ca629d0906a34",
       "AppSecret": "1d51ae95382ce4a4b81885b785f469fa",
@@ -26,8 +26,8 @@
     "AlertLevel": "P1",
     "Email": null,
     "Extra": {
-      "Interval": 10,
-      "MinPeer": 100
+      "Interval": 600,
+      "MinPeer": 3
     }
   }
   ]
