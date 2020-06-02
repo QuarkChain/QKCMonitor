@@ -67,7 +67,7 @@ func (b *BlockTime) Check() []string {
 					ls.time, ls.height, ts, height, ts-ls.time, height-ls.height, b.param.MaxBlock)))
 			}
 		}
-		fmt.Println("检查完毕", b.LastHeight, height, ts)
+		fmt.Println("check end", "ip", host, time.Now().Format("2006-01-02 15:04:05"), "lastHeight", b.LastHeight, "latest Height", height)
 		b.LastHeight[host].height = height
 		b.LastHeight[host].time = ts
 	}

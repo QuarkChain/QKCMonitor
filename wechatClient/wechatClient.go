@@ -131,7 +131,6 @@ func (t *WechatClient) SendMsg(msg string) {
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println("发送成功", v)
 	}
-
+	fmt.Println("send successfully", "len(Flist)", len(t.fList.FList), "msg", msg)
 }
