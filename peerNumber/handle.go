@@ -59,7 +59,7 @@ func (b *PeerNumber) Check() []string {
 					b.lastTs, ts, ts-b.lastTs, peerNumber, b.param.MinPeer)))
 			}
 		}
-		fmt.Println("check end", "ip", host, time.Now().Format("2006-01-02 15:04:05"), "peer number", peerNumber)
+		fmt.Println("PeerNumber check end", "ip", host, time.Now().Format("2006-01-02 15:04:05"), "peer number", peerNumber)
 		b.lastTs = ts
 	}
 	return res
