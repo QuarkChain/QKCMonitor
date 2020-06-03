@@ -1,7 +1,7 @@
 {
   "RulerList": [{
     "Module": "BlockTime",
-    "Hosts": ["http://13.228.159.171:38391","http://52.194.81.124:38391"],
+    "Hosts": ["http://13.228.159.171:38391"],
     "Interval": 600,
     "WeChatDetail": {
       "AppID": "wx900ca629d0906a34",
@@ -16,7 +16,7 @@
     }
   },{
     "Module": "PeerNumber",
-    "Hosts": ["http://13.228.159.171:38391","http://52.194.81.124:38391"],
+    "Hosts": ["http://13.228.159.171:38391"],
     "Interval": 600,
     "WeChatDetail": {
       "AppID": "wx900ca629d0906a34",
