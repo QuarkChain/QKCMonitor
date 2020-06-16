@@ -76,7 +76,8 @@ func (b *BlockTime) Check() []string {
 
 func (b *BlockTime) PreCheck() error {
 	for host, client := range b.QkcClients {
-		_, err := client.GetRootBlockHeight()
+		h, err := client.GetRootBlockHeight()
+		fmt.Println("BlockTime PreCheck", host, h, err)
 		if err != nil {
 			return fmt.Errorf("host %v GetRootBlockHeight err %v", host, err.Error())
 		}

@@ -67,7 +67,8 @@ func (b *PeerNumber) Check() []string {
 
 func (b *PeerNumber) PreCheck() error {
 	for host, client := range b.QkcClients {
-		_, err := client.GetPeers()
+		h, err := client.GetPeers()
+		fmt.Println("BlockTime PreCheck", host, h, err)
 		if err != nil {
 			return fmt.Errorf("host %v peerNumber err %v", host, err.Error())
 		}
