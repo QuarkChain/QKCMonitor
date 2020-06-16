@@ -30,7 +30,7 @@ func NewClient(host string) *Client {
 }
 
 func (c *Client) GetRootBlockHeight() (uint64, error) {
-	resp, err := c.client.Call("getRootBlockByHeight", "")
+	resp, err := c.client.Call("getRootBlockByHeight")
 	if err != nil {
 		return 0, err
 	}
