@@ -81,5 +81,6 @@ func (b *BlockTime) PreCheck() error {
 			return fmt.Errorf("host %v GetRootBlockHeight err %v", host, err.Error())
 		}
 	}
+	fmt.Println("BlockTime PreCheck end", len(b.QkcClients))
 	return nil
 }

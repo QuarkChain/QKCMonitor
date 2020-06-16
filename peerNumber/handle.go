@@ -67,10 +67,11 @@ func (b *PeerNumber) Check() []string {
 
 func (b *PeerNumber) PreCheck() error {
 	for host, client := range b.QkcClients {
-		_, err := client.GetRootBlockHeight()
+		_, err := client.GetPeers()
 		if err != nil {
-			return fmt.Errorf("host %v GetRootBlockHeight err %v", host, err.Error())
+			return fmt.Errorf("host %v peerNumber err %v", host, err.Error())
 		}
 	}
+	fmt.Println("PeerNumber PreCheck end", len(b.QkcClients))
 	return nil
 }
