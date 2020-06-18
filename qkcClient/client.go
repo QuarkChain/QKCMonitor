@@ -3,6 +3,7 @@ package qkcClient
 import (
 	"errors"
 	"math/big"
+	"time"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ybbus/jsonrpc"
@@ -29,15 +30,35 @@ func NewClient(host string) *Client {
 	return &Client{client: client}
 }
 
+func (c *Client) tryCall(method string, params ...interface{}) (*jsonrpc.RPCResponse, error) {
+	var (
+		errMsg error                = nil
+		cnt                         = 0
+		resp   *jsonrpc.RPCResponse = nil
+	)
+	for cnt < 3 {
+		time.Sleep(3 * time.Second)
+		cnt++
+		resp, err := c.client.Call(method, params)
+		if err != nil {
+			errMsg = err
+			continue
+		}
+		if resp.Error != nil {
+			errMsg = resp.Error
+			continue
+		}
+		return resp, errMsg
+
+	}
+	return resp, errMsg
+}
+
 func (c *Client) GetRootBlockHeight() (uint64, error) {
-	resp, err := c.client.Call("getRootBlockByHeight", nil, false)
+	resp, err := c.tryCall("getRootBlockByHeight", nil, false)
 	if err != nil {
 		return 0, err
 	}
-	if resp.Error != nil {
-		return 0, resp.Error
-	}
-
 	height, ok := resp.Result.(map[string]interface{})["height"]
 	if !ok {
 		return 0, errors.New("resp err")
@@ -47,13 +68,9 @@ func (c *Client) GetRootBlockHeight() (uint64, error) {
 }
 
 func (c *Client) GetPeers() (int, error) {
-	resp, err := c.client.Call("getPeers")
+	resp, err := c.tryCall("getPeers")
 	if err != nil {
 		return 0, err
 	}
-	if resp.Error != nil {
-		return 0, resp.Error
-	}
-
 	return len(resp.Result.(map[string]interface{})["peers"].([]interface{})), nil
 }
