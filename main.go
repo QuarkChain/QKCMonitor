@@ -28,7 +28,8 @@ func (r *Instance) loop() {
 	checkTicker := time.NewTicker(time.Duration(r.config.Interval) * time.Second)
 	defer checkTicker.Stop()
 
-	summaryTicker := time.NewTicker(12 * 60 * time.Minute)
+	//summaryTicker := time.NewTicker(12 * 60 * time.Minute)
+	summaryTicker := time.NewTicker(60 * time.Second)
 	defer summaryTicker.Stop()
 	for {
 		select {
@@ -51,7 +52,7 @@ func (r *Instance) makeErrMsg(err string) string {
 }
 
 func (r *Instance) makeSummaryMsg(d []string) string {
-	ans := "当前状态: 时间" + time.Now().Format("2006-01-02 15:04:05") + "\n"
+	ans := "当前各节点状态展示,没有故障!!!!!!!!!  时间" + time.Now().Format("2006-01-02 15:04:05") + "\n"
 	for _, v := range d {
 		ans = ans + v
 		ans = ans + "\n"
