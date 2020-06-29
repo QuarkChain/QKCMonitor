@@ -21,6 +21,7 @@
     "WeChatDetail": {
       "AppID": "wx900ca629d0906a34",
       "AppSecret": "1d51ae95382ce4a4b81885b785f469fa",
+
       "TemplateId": "oVzLVIFdm_joCZyWFrPEwDnNcxGyrU6I_UNQiNpSYs8"
     },
     "AlertLevel": "P1",

@@ -11,6 +11,7 @@ import (
 type ModuleInterface interface {
 	Check() []string
 	PreCheck() error
+	Summary() []string
 }
 
 func NewRuler(config common.Config) (ModuleInterface, error) {

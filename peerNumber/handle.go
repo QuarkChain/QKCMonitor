@@ -65,6 +65,19 @@ func (b *PeerNumber) Check() []string {
 	return res
 }
 
+func (b *PeerNumber) Summary() []string {
+	res := make([]string, 0)
+	for host, client := range b.QkcClients {
+		peerNumber, err := client.GetPeers()
+		if err != nil {
+			res = append(res, b.makeError(host, err))
+		} else {
+			res = append(res, fmt.Sprintf("ip:%v peerNumber:%d", host, peerNumber))
+		}
+	}
+	return res
+}
+
 func (b *PeerNumber) PreCheck() error {
 	for host, client := range b.QkcClients {
 		h, err := client.GetPeers()

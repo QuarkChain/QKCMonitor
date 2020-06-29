@@ -74,6 +74,19 @@ func (b *BlockTime) Check() []string {
 	return res
 }
 
+func (b *BlockTime) Summary() []string {
+	res := make([]string, 0)
+	for host, client := range b.QkcClients {
+		height, err := client.GetRootBlockHeight()
+		if err != nil {
+			res = append(res, b.makeError(host, err))
+		} else {
+			res = append(res, fmt.Sprintf("ip:%v height:%v", host, height))
+		}
+
+	}
+	return res
+}
 func (b *BlockTime) PreCheck() error {
 	for host, client := range b.QkcClients {
 		h, err := client.GetRootBlockHeight()
