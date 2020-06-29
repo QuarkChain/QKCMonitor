@@ -28,8 +28,8 @@ func (r *Instance) loop() {
 	checkTicker := time.NewTicker(time.Duration(r.config.Interval) * time.Second)
 	defer checkTicker.Stop()
 
-	//summaryTicker := time.NewTicker(12 * 60 * time.Minute)
-	summaryTicker := time.NewTicker(60 * time.Second)
+	summaryTicker := time.NewTicker(12 * 60 * time.Minute)
+	//summaryTicker := time.NewTicker(60 * time.Second)
 	defer summaryTicker.Stop()
 	for {
 		select {
