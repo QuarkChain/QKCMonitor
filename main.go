@@ -25,6 +25,7 @@ func NewInstance(config common.Config) (*Instance, error) {
 }
 
 func (r *Instance) loop() {
+	r.weChatClt.SendMsg(r.makeSummaryMsg(r.checker.Summary()))
 	checkTicker := time.NewTicker(time.Duration(r.config.Interval) * time.Second)
 	defer checkTicker.Stop()
 
