@@ -1,7 +1,7 @@
 {
   "RulerList": [{
     "Module": "BlockTime",
-    "Hosts": ["http://13.228.159.171:38391","http://52.194.81.124:38391","http://34.208.170.17:38391","http://54.203.168.137:38391","http://209.97.147.80:38391","http://138.197.58.88:38391"],
+    "Hosts": ["http://128.199.215.162:38391","http://34.208.170.17:38391","http://209.97.147.80:38391"],
     "Interval": 600,
     "WeChatDetail": {
       "AppID": "wx900ca629d0906a34",
@@ -15,8 +15,8 @@
       "MaxBlock": 1
     }
   },{
-    "Module": "PeerNumber",
-    "Hosts": ["http://13.228.159.171:38391","http://52.194.81.124:38391","http://138.68.224.79:38391","http://159.89.142.41:38391"],
+    "Module": "qpoolStats",
+    "Hosts": ["https://shard0.qpool.net/api/stats"],
     "Interval": 600,
     "WeChatDetail": {
       "AppID": "wx900ca629d0906a34",
